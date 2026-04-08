@@ -1,0 +1,133 @@
+{
+  "documentationUrl": "https://docs.assured.com/active-audit",
+  "connectionSpecification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Destination Azure Blob Storage",
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["container", "credentials"],
+    "properties": {
+      "container": {
+        "type": "string",
+        "title": "Container Name",
+        "description": "The blob container to write to.",
+        "minLength": 1,
+        "order": 0
+      },
+      "credentials": {
+        "type": "object",
+        "title": "Authentication",
+        "description": "Choose one authentication method.",
+        "order": 1,
+        "oneOf": [
+          {
+            "title": "Connection String",
+            "additionalProperties": false,
+            "required": ["auth_type", "connection_string"],
+            "properties": {
+              "auth_type": {
+                "type": "string",
+                "const": "connection_string",
+                "order": 0
+              },
+              "connection_string": {
+                "type": "string",
+                "title": "Connection String",
+                "airbyte_secret": true,
+                "minLength": 1,
+                "order": 1
+              }
+            }
+          },
+          {
+            "title": "SAS Token",
+            "additionalProperties": false,
+            "required": ["auth_type", "account_name", "sas_token"],
+            "properties": {
+              "auth_type": {
+                "type": "string",
+                "const": "sas_token",
+                "order": 0
+              },
+              "account_name": {
+                "type": "string",
+                "title": "Storage Account Name",
+                "minLength": 1,
+                "order": 1
+              },
+              "sas_token": {
+                "type": "string",
+                "title": "SAS Token",
+                "airbyte_secret": true,
+                "minLength": 1,
+                "order": 2
+              }
+            }
+          },
+          {
+            "title": "Account Key",
+            "additionalProperties": false,
+            "required": ["auth_type", "account_name", "account_key"],
+            "properties": {
+              "auth_type": {
+                "type": "string",
+                "const": "account_key",
+                "order": 0
+              },
+              "account_name": {
+                "type": "string",
+                "title": "Storage Account Name",
+                "minLength": 1,
+                "order": 1
+              },
+              "account_key": {
+                "type": "string",
+                "title": "Account Key",
+                "airbyte_secret": true,
+                "minLength": 1,
+                "order": 2
+              }
+            }
+          },
+          {
+            "title": "Service Principal",
+            "additionalProperties": false,
+            "required": ["auth_type", "account_name", "tenant_id", "client_id", "client_secret"],
+            "properties": {
+              "auth_type": {
+                "type": "string",
+                "const": "service_principal",
+                "order": 0
+              },
+              "account_name": {
+                "type": "string",
+                "title": "Storage Account Name",
+                "minLength": 1,
+                "order": 1
+              },
+              "tenant_id": {
+                "type": "string",
+                "title": "Tenant ID",
+                "minLength": 1,
+                "order": 2
+              },
+              "client_id": {
+                "type": "string",
+                "title": "Client ID",
+                "minLength": 1,
+                "order": 3
+              },
+              "client_secret": {
+                "type": "string",
+                "title": "Client Secret",
+                "airbyte_secret": true,
+                "minLength": 1,
+                "order": 4
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
