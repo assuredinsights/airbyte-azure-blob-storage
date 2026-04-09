@@ -39,6 +39,12 @@ DEFAULT_WRITE_MODE = "overwrite"
 
 class DestinationAzureBlob(Destination):
 
+    SUPPORTED_DESTINATION_SYNC_MODES = [
+        DestinationSyncMode.overwrite,
+        DestinationSyncMode.append,
+    ]
+
+
     def check(self, logger, config: Mapping[str, Any]) -> AirbyteConnectionStatus:
         """
         Verify connectivity by creating and deleting a test blob.
