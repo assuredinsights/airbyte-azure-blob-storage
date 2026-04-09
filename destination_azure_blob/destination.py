@@ -15,6 +15,7 @@ Records are buffered per blob path and written at stream completion.
 
 import json
 import logging
+import os
 from collections import defaultdict
 from typing import Any, Iterable, Mapping
 
@@ -44,7 +45,20 @@ class DestinationAzureBlob(Destination):
         DestinationSyncMode.append,
     ]
 
+    def spec(self, *args, **kwargs) -> ConnectorSpecification:
+        path = os.path.join(os.path.dirname(__file__), "spec.json")
+        with open(path) as f:
+            raw = json.load(f)
 
+        return ConnectorSpecification(
+            documentationUrl=raw.get("documentationUrl"),
+            connectionSpecification=raw["connectionSpecification"],
+            supported_destination_sync_modes=[
+                DestinationSyncMode.append,
+                DestinationSyncMode.overwrite,
+            ],
+    )
+    
     def check(self, logger, config: Mapping[str, Any]) -> AirbyteConnectionStatus:
         """
         Verify connectivity by creating and deleting a test blob.
