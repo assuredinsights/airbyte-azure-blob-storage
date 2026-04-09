@@ -1,7 +1,0 @@
-{
-  "container": "clients",
-  "credentials": {
-    "auth_type": "connection_string",
-    "connection_string": "BlobEndpoint=https://activeauditairbyte.blob.core.windows.net/;QueueEndpoint=https://activeauditairbyte.queue.core.windows.net/;FileEndpoint=https://activeauditairbyte.file.core.windows.net/;TableEndpoint=https://activeauditairbyte.table.core.windows.net/;SharedAccessSignature=sv=2025-11-05&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2026-04-08T22:18:46Z&st=2026-04-08T14:03:46Z&spr=https,http&sig=SpOJy49KuVD2%2BkTcYNK4t6YFD8K4E2%2FAsjNxrYnpiJY%3D"
-  }
-}
