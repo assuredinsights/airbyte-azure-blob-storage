@@ -106,6 +106,8 @@ class DestinationAzureBlob(Destination):
             if message.type == Type.RECORD:
                 record     = dict(message.record.data)
                 stream     = message.record.stream
+                namespace = message.record.namespace or ""
+                stream_key = f"{namespace}.{stream}" if namespace else stream
                 blob_path  = record.pop(BLOB_PATH_FIELD, None)
                 write_mode = record.pop(WRITE_MODE_FIELD, DEFAULT_WRITE_MODE)
 
@@ -116,8 +118,8 @@ class DestinationAzureBlob(Destination):
                     )
                     continue
 
-                buffer[stream][blob_path]["records"].append(record)
-                buffer[stream][blob_path]["write_mode"] = write_mode
+                buffer[stream_key][blob_path]["records"].append(record)
+                buffer[stream_key][blob_path]["write_mode"] = write_mode
 
             elif message.type == Type.STATE:
                 # Flush all buffered streams before emitting state
