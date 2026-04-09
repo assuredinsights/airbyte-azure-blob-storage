@@ -1,5 +1,5 @@
 import sys
-from airbyte_cdk.entrypoint import launch
+from airbyte_cdk.destinations import launch
 from destination_azure_blob import DestinationAzureBlob
 
 if __name__ == "__main__":
