@@ -34,7 +34,7 @@ from azure.core.exceptions import ResourceNotFoundError
 from .storage import get_blob_service_client
 
 BLOB_PATH_FIELD  = "az_blob_path"
-WRITE_MODE_FIELD = "az_blob__write_mode"
+WRITE_MODE_FIELD = "az_blob_write_mode"
 DEFAULT_WRITE_MODE = "overwrite"
 
 
