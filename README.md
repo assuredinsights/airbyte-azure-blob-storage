@@ -15,13 +15,13 @@ The destination reads two control fields from each record:
 
 | Field | Required | Description |
 |---|---|---|
-| `_blob_path` | Yes | Full blob path relative to the container. e.g. `{client}/raw/activity/{yyyy}/{MM}/{yyyyMMdd}.json` |
-| `_write_mode` | No | `overwrite` (default) or `append` |
+| `az_blob_path` | Yes | Full blob path relative to the container. e.g. `{client}/raw/activity/{yyyy}/{MM}/{yyyyMMdd}.json` |
+| `az_blob_write_mode` | No | `overwrite` (default) or `append` |
 
 Both fields are stripped from the record before writing. The remaining data is
 written as JSONL — one record per line.
 
-Records sharing the same `_blob_path` within a sync are buffered and written
+Records sharing the same `az_blob_path` within a sync are buffered and written
 together as a single blob.
 
 ---
@@ -29,7 +29,7 @@ together as a single blob.
 ## Write Modes
 
 ### `overwrite`
-Deletes the existing blob at `_blob_path` (if it exists) then writes all buffered
+Deletes the existing blob at `az_blob_path` (if it exists) then writes all buffered
 records. Use this for full refresh streams where the file should be replaced on
 every sync.
 
@@ -108,16 +108,16 @@ Configure exactly one authentication method in the destination settings.
 
 ## Source Integration Guide
 
-To use this destination, your source connector must add `_blob_path` and
-`_write_mode` to every yielded record.
+To use this destination, your source connector must add `az_blob_path` and
+`az_blob_write_mode` to every yielded record.
 
 ### Minimal example
 
 ```python
 def read_records(self, sync_mode, ...):
     for record in fetch_data():
-        record["_blob_path"]  = "{client}/raw/{stream}/{yyyy}/{MM}/{dd}/data.json"
-        record["_write_mode"] = "overwrite"
+        record["az_blob_path"]  = "{client}/raw/{stream}/{yyyy}/{MM}/{dd}/data.json"
+        record["az_blob_write_mode"] = "overwrite"
         yield record
 ```
 
@@ -134,8 +134,8 @@ def read_records(self, sync_mode, ...):
     path  = f"{client}/raw/users/{today.strftime('%Y/%m/%d')}/users.json"
 
     for user in fetch_users():
-        user["_blob_path"]  = path
-        user["_write_mode"] = "overwrite"
+        user["az_blob_path"]  = path
+        user["az_blob_write_mode"] = "overwrite"
         yield user
 ```
 
@@ -154,8 +154,8 @@ def read_records(self, sync_mode, stream_state=None, ...):
         path = f"{client}/raw/events/{day.strftime('%Y/%m/%d/%Y%m%d')}.json"
 
         for event in fetch_events(day):
-            event["_blob_path"]  = path
-            event["_write_mode"] = "append"
+            event["az_blob_path"]  = path
+            event["az_blob_write_mode"] = "append"
             yield event
 ```
 
@@ -167,14 +167,14 @@ Result:
 ### Multiple files from one stream
 
 If your stream needs to write to different paths (e.g. one file per entity ID),
-set a different `_blob_path` per record:
+set a different `az_blob_path` per record:
 
 ```python
 def read_records(self, sync_mode, ...):
     for item in fetch_items():
         item_id = item.get("id")
-        item["_blob_path"]  = f"{client}/raw/items/{yyyy}/{MM}/{dd}/{item_id}.json"
-        item["_write_mode"] = "append"
+        item["az_blob_path"]  = f"{client}/raw/items/{yyyy}/{MM}/{dd}/{item_id}.json"
+        item["az_blob_write_mode"] = "append"
         yield item
 ```
 
@@ -191,7 +191,7 @@ Result:
 
 Records are written as JSONL — one JSON object per line.
 
-The `_blob_path` and `_write_mode` fields are removed before writing.
+The `az_blob_path` and `az_blob_write_mode` fields are removed before writing.
 Only the original source data appears in the blob.
 
 Example output:

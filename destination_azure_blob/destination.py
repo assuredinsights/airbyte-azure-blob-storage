@@ -2,9 +2,9 @@
 destination.py — Generic Azure Blob Storage destination.
 
 Each record must contain:
-  _blob_path:   full blob path to write to
+  az_blob_path:   full blob path to write to
                 e.g. rebound/raw/activity/2026/04/08/20260408.json
-  _write_mode:  "overwrite" or "append"
+  az_blob_write_mode:  "overwrite" or "append"
                 overwrite — delete existing blob then write
                 append    — write new file at path (path is unique per day
                             so this creates a new file without touching old ones)
@@ -33,8 +33,8 @@ from azure.core.exceptions import ResourceNotFoundError
 
 from .storage import get_blob_service_client
 
-BLOB_PATH_FIELD  = "_blob_path"
-WRITE_MODE_FIELD = "_write_mode"
+BLOB_PATH_FIELD  = "az_blob_path"
+WRITE_MODE_FIELD = "az_blob__write_mode"
 DEFAULT_WRITE_MODE = "overwrite"
 
 
@@ -96,7 +96,7 @@ class DestinationAzureBlob(Destination):
         """
         Buffer records per blob path then write at stream completion.
 
-        Records are grouped by _blob_path. When a stream status COMPLETE
+        Records are grouped by az_blob_path. When a stream status COMPLETE
         message arrives, all buffered records for that stream are flushed
         to blob storage.
         """
@@ -156,7 +156,7 @@ class DestinationAzureBlob(Destination):
     ) -> None:
         """
         Write all buffered records for a stream to blob storage.
-        One blob per unique _blob_path.
+        One blob per unique az_blob_path.
         """
         for blob_path, entry in paths.items():
             records    = entry["records"]
